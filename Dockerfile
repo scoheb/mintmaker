@@ -24,11 +24,20 @@ COPY internal/controller/ internal/controller/
 # by leaving it empty we can ensure that the container and binary shipped on it will have the same platform.
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o manager cmd/main.go
 
-# Use distroless as minimal base image to package the manager binary
-# Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/static:nonroot
+# Use ubi-micro as minimal base image to package the manager binary
+# See https://catalog.redhat.com/software/containers/ubi9/ubi-micro/615bdf943f6014fa45ae1b58
+FROM registry.access.redhat.com/ubi9/ubi-micro:9.3-9
 WORKDIR /
 COPY --from=builder /workspace/manager .
+
+# It is mandatory to set these labels
+LABEL name="Konflux Mintmaker"
+LABEL description="Konflux Mintmaker"
+LABEL io.k8s.description="Konflux Mintmaker"
+LABEL io.k8s.display-name="mintmaker"
+LABEL summary="Konflux Mintmaker"
+LABEL com.redhat.component="mintmaker"
+
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]
