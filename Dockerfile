@@ -26,7 +26,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o ma
 
 # Use ubi-micro as minimal base image to package the manager binary
 # See https://catalog.redhat.com/software/containers/ubi9/ubi-micro/615bdf943f6014fa45ae1b58
-FROM registry.access.redhat.com/ubi9/ubi-micro:9.3-9
+FROM registry.access.redhat.com/ubi9/ubi-micro:9.4-9
 WORKDIR /
 COPY --from=builder /workspace/manager .
 
